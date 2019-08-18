@@ -1,12 +1,14 @@
+""" Checkout Module """
 
 from decimal import Decimal
 
 
-class Checkout(object):
+class Checkout():
+    """Checkout is used to scan items from a shopping cart. It applies
+    the pricing rules provided to calculate the total amount to pay.
+    """
     def __init__(self, pricing_rules):
-        """ Checkout is used to scan items from a shopping cart. It applies
-            the pricing rules provided to calculate the total amount to pay.
-
+        """
         Args:
             pricing_rules: a dictionary of price and discount rules
                            applicable to each item.
@@ -24,7 +26,7 @@ class Checkout(object):
             ItemNotFound: If the scanned item's SKU does not exist in the pricing rules.
         """
         if item not in self.pricing_rules:
-            raise ValueError('Item %s is not known.', item)
+            raise ValueError('Item %s is not known.' % item)
         if item in self.scanned_items:
             self.scanned_items[item] += 1
         else:

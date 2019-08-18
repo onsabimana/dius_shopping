@@ -1,6 +1,15 @@
-test:
-	docker run --rm \
-		-v $(PWD):/var/task \
-		-w /var/task --entrypoint /bin/bash \
-		lambci/lambda:build-python3.7 -c \
-		"python -m unittest discover -s tests/ -v -p 'test_*.py'"
+########################################################################
+#
+# The Makefile.
+#
+#
+#
+#########################################################################
+
+lint:
+	docker run --rm -v $(PWD):/app -w /app --entrypoint /bin/bash \
+		python:3.7 -c "pip install pylint && pylint shopping"
+
+test: lint
+	docker run --rm -v $(PWD):/app -w /app --entrypoint /bin/bash \
+		python:3.7 -c "python -m unittest discover -s tests/ -v -p 'test_*.py'"
