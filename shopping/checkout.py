@@ -54,12 +54,15 @@ class Checkout():
             sales_price = Decimal(item_count) * \
                 Decimal(item_price_rule['Price'])
 
-            # Bulk pricing on iPad more than 4 purchased.
+            # Bulk discount pricing on iPad more than 4 purchased.
             if item == 'ipd' and item_count > discount_threshold_count:
                 sales_price = Decimal(item_count) * \
                     Decimal(item_price_rule['Discount']['Price'])
 
             # VGA Adapter is given free for each MacBook Pro Purchase
+            # The discount is dependent on another item being in the cart.
+            # This prove challenging to generalise as it has at least one level of indirection.
+            # TBD: Figure out how to represent this case in the price model.
             if item == 'vga' and 'mbp' in self.scanned_items:
                 if self.scanned_items['mbp'] > item_count:
                     sales_price = Decimal(0)
@@ -69,6 +72,15 @@ class Checkout():
                         item_count - self.scanned_items['mbp']) * \
                         Decimal(item_price_rule['Price'])
 
+            # Selective discount pricing.
+            # E.g 3 for 2 type of discount.
+            # We use the concept of multiplier and divider in an attempt
+            # to generalise this calculation. The modulus operation is used to project
+            # the actual item counts to the chargeable count.
+            # For example in the case above (3 -> 2) if you bought 7 items you pay for 5.
+            # Mod(7, 3) == 1 to find the number of items not included in the discount.
+            # 7 - 1 == 6 which the number of items to be included in the discount.
+            # If 3 -> 2 then 6 -> 4. Therefore you pay for the tital of (4 + 1) == 5 items.
             if item == 'atv' and item_count >= discount_threshold_count:
                 remainder = item_count % discount_threshold_count
                 new_item_count = remainder + multiplier * \

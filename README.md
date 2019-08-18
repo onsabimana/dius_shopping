@@ -16,4 +16,4 @@ The checkout feature implements the rules specified [here](https://github.com/Di
 
 ## To do
 
-- Generalisse the implementation of the pricing rules, such that the pricing model can be modified independed of the application code.
+- Generalise the implementation of the pricing rules, such that the pricing model can be modified independed of the application code.
