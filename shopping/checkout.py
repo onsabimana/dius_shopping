@@ -30,6 +30,11 @@ class Checkout(object):
         else:
             self.scanned_items[item] = 1
 
+    def clear(self):
+        """Clears the scanned items and total prices."""
+        self._total = Decimal(0)
+        self.scanned_items = {}
+
     def total(self):
         """ Adds the total price for all scanned items.
             Discounts are applied according to the rules.
@@ -38,6 +43,36 @@ class Checkout(object):
             The total price.
         """
         for item in self.scanned_items:
-            pricing_rule = self.pricing_rules[item]
-            self._total += Decimal(pricing_rule['Price'])
+            item_price_rule = self.pricing_rules[item]
+            item_count = self.scanned_items[item]
+            multiplier = item_price_rule['Discount']['Multiplier']
+            divider = item_price_rule['Discount']['Divider']
+            discount_threshold_count = item_price_rule['Discount']['ItemCount']
+
+            sales_price = Decimal(item_count) * \
+                Decimal(item_price_rule['Price'])
+
+            # Bulk pricing on iPad more than 4 purchased.
+            if item == 'ipd' and item_count > discount_threshold_count:
+                sales_price = Decimal(item_count) * \
+                    Decimal(item_price_rule['Discount']['Price'])
+
+            # VGA Adapter is given free for each MacBook Pro Purchase
+            if item == 'vga' and 'mbp' in self.scanned_items:
+                if self.scanned_items['mbp'] > item_count:
+                    sales_price = Decimal(0)
+                else:
+                    # Charge for VGA not matching one-to-one with MacBook Pro
+                    sales_price = Decimal(
+                        item_count - self.scanned_items['mbp']) * \
+                        Decimal(item_price_rule['Price'])
+
+            if item == 'atv' and item_count >= discount_threshold_count:
+                remainder = item_count % discount_threshold_count
+                new_item_count = remainder + multiplier * \
+                    (item_count - remainder) / divider
+                sales_price = Decimal(new_item_count) * \
+                    Decimal(item_price_rule['Price'])
+
+            self._total += sales_price
         return self._total
