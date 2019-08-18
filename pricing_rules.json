@@ -1,0 +1,50 @@
+{
+    "ipd": {
+        "Name": "Super Ipad",
+        "Price": "549.99",
+        "Currency": "AUD",
+        "Discount": {
+            "Rule": "GreaterThanOrEqual",
+            "ItemCount": 1,
+            "Price": "549.99",
+            "Multiplier": 1,
+            "Divider": 1
+        }
+    },
+    "mbp": {
+        "Name": "MacBook Pro",
+        "Price": "1399.99",
+        "Currency": "AUD",
+        "Discount": {
+            "Rule": "GreaterThanOrEqual",
+            "ItemCount": 1,
+            "Price": "1399.99",
+            "Multiplier": 1,
+            "Divider": 1
+        }
+    },
+    "atv": {
+        "Name": "Apple TV",
+        "Price": "109.50",
+        "Currency": "AUD",
+        "Discount": {
+            "Rule": "GreaterThanOrEqual",
+            "ItemCount": 1,
+            "Price": "109.50",
+            "Multiplier": 1,
+            "Divider": 1
+        }
+    },
+    "vga": {
+        "Name": "VGA Adapter",
+        "Price": "30.00",
+        "Currency": "AUD",
+        "Discount": {
+            "Rule": "GreaterThanOrEqual",
+            "ItemCount": 1,
+            "Price": "30.00",
+            "Multiplier": 1,
+            "Divider": 1
+        }
+    }
+}
